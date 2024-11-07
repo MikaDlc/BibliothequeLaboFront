@@ -1,0 +1,62 @@
+/* Center the main block in the middle of the page and elevate it */
+.main {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #234b61;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(19, 77, 200, 0.767);
+    border-radius: 8px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #234b61;
+}
+
+label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #234b61;
+    text-decoration: underline;
+}
+
+label:hover {
+    cursor: pointer;
+}
+
+p-inputGroup {
+    margin-top: 30px;
+    height: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+p-button {
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+.ErrorInput {
+    border: 3px solid red;
+    border-radius: 8px;
+}
