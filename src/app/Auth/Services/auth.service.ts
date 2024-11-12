@@ -13,7 +13,7 @@ export class AuthService {
   private _url = 'https://localhost:7262/api/Auth/';
   isConnectedSubject: Subject<boolean> = new Subject<boolean>();
 
-  get isConnected() {
+  get isConnected() : boolean {
     return !!localStorage.getItem('token');
   }
 

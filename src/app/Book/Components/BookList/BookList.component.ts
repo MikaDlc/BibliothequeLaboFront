@@ -9,18 +9,22 @@ import { AuthService } from '../../../Auth/Services/auth.service';
   styleUrl: './BookList.component.css',
 })
 export class BookListComponent implements OnInit {
-  
+  isAuth: boolean = false;
   books: Book[] = [];
   private _bookService: BookService = inject(BookService);
   private _AuthService: AuthService = inject(AuthService);
   
   ngOnInit(): void {
     this.getBooks();
+    this._AuthService.isConnectedSubject.subscribe({
+      next: (isAuth: boolean) => {
+        this.isAuth = isAuth;
+      }
+    });
+    this._AuthService.emitIsConnected();
   }
   
-  get isAuth(): boolean {
-    return this._AuthService.isConnected;
-  }
+ 
 
   getBooks() {
     this._bookService.getBooks().subscribe({
@@ -29,7 +33,7 @@ export class BookListComponent implements OnInit {
   }
   
   AddBook() {
-    
+
   }
 
 }

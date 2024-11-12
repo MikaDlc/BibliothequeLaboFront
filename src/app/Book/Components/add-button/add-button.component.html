@@ -1,6 +1,6 @@
 
 <div class="main">
-    <button (click)="onAddBook()">
+    <button (click)="onAddBook()" [hidden]="!isAuth">
         <i class="pi pi-plus"></i>
     </button>
 </div>

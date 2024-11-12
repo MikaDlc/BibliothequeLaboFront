@@ -1,8 +1,8 @@
 <div class="main">
     @for (book of books; track $index) {
         <div class="book">
-            <app-book [book]="book" [isAuth]="isAuth"/>
+            <app-book [book]="book"/>
         </div>
     }
 </div>
-<app-add-button *ngIf="isAuth" (addBook)="AddBook()"></app-add-button>
+<app-add-button (addBook)="AddBook()"></app-add-button>
