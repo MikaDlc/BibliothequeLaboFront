@@ -34,11 +34,13 @@ export class NavBarComponent implements OnInit {
     initLinks(){
       if(!this.IsConnected){
         this.items = [
+          { label: 'Books', icon: 'pi pi-fw pi-book', routerLink: '/Books/All' },
           { label: 'Login', icon: 'pi pi-fw pi-user', routerLink: '/Auth/Login' },
         ];
         this.activeItem = this.items[0];
       } else {
         this.items = [
+          { label: 'Books', icon: 'pi pi-fw pi-book', routerLink: '/Books/All' },
           { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: '/Auth/Profile' },
         ];
         this.activeItem = this.items[0];

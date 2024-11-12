@@ -1,0 +1,25 @@
+.main {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+button {
+    width: 60px;
+    height: 60px;
+    background-color: blue;
+    border-radius: 50%;
+    color: white;
+    border: 2px solid;
+    border-color:  white black black white;
+}
+
+button:hover {
+    background-color: darkblue;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+    transform: scale(1.1);
+}
+
+button:active {
+    border-color:  black white white black;
+}
