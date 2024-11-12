@@ -75,6 +75,6 @@ export class RegisterComponent {
   }
 
   Login() {
-    this.$router.navigate(['/', 'auth', 'login']);
+    this.$router.navigate(['/', 'Auth', 'Login']);
   }
 }

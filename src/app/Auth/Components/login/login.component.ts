@@ -34,6 +34,7 @@ export class LoginComponent {
   
   ValidLogin() {
     this._AuthServices.login(this.fg.value.email, this.fg.value.password).subscribe({
+      next: () => this._AuthServices.emitIsConnected(),
       error: (error) => {
         this.$message.add({ severity: 'error', summary: 'Error', detail: 'Login or password is invalid' });
       }
@@ -41,7 +42,7 @@ export class LoginComponent {
   }
 
   Register() {
-    this.$router.navigate(['/', 'auth', 'register']);
+    this.$router.navigate(['/', 'Auth', 'Register']);
   }
 
   get f () {

@@ -14,13 +14,19 @@ import { RegisterComponent } from './Auth/Components/register/register.component
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CardModule } from 'primeng/card';
+import { BookComponent } from './Book/Components/Book/Book.component';
+import { BookListComponent } from './Book/Components/BookList/BookList.component';
+import { TabMenuModule } from 'primeng/tabmenu';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     NavBarComponent,
-    RegisterComponent
+    RegisterComponent,
+    BookComponent,
+    BookListComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -33,7 +39,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    ToastModule
+    ToastModule,
+    CardModule,
+    TabMenuModule
   ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent]
