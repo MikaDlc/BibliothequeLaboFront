@@ -10,4 +10,19 @@
 .book {
   margin-left: 20px;
   margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(19, 77, 200, 0.767);
+}
+
+.p-dropdown {
+  width: 100%;
+}
+
+.p-inputnumber {
+  width: 100%;
+}
+
+.Cross {
+  position: relative;
+  left: -4ch;
+  user-select: none;
 }

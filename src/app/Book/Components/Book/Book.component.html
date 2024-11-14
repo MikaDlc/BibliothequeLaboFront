@@ -1,18 +1,107 @@
 <p-card [header]="book.title" [subheader]="book.price.toString() + '€'" [style]="{ width: '360px' }">
-    <ng-template pTemplate="header">
-        <img alt="Card" src="/BookTemplate.png" />
-    </ng-template>
-    <p>
-        Edition :{{ book.edition }}<br/>
-        Edition Date :{{ book.editionDate }}
-    </p>
-    <ng-template pTemplate="footer">
-        @if (_isAuth) {
-        <div class="flex gap-3 mt-1">
-            <p-button label="Cancel" severity="secondary" class="w-full" styleClass="w-full" />
-            <p-button label="Save" class="w-full" styleClass="w-full" />
-        </div>
-        }
-    </ng-template>
-    
+  <ng-template pTemplate="header">
+    <img alt="Card" ngSrc="/BookTemplate.png" height="200" width="300" priority/>
+  </ng-template>
+  <p>
+    Edition : {{ book.edition }}<br/>
+    Edition Date : {{ book.editionDate }}
+  </p>
+  <ng-template pTemplate="footer">
+    @if (isAuth) {
+      <p-buttonGroup>
+        <p-button label="Details" severity="info" icon="pi pi-info-circle" (click)="showDetailsDialog()"/>
+<!--        <p-button label="Edit" severity="warning" icon="pi pi-pencil" (click)="showEditDialog()"/>-->
+      </p-buttonGroup>
+    }
+  </ng-template>
+
 </p-card>
+
+<p-dialog [header]="'Details de' + book.title" [modal]="true" [(visible)]="visibleDialog" [style]="{ width: '26rem' }">
+  <table>
+    <tr>
+      <td>Édition :</td>
+      <td>
+        <input pInputText id="edition" [(ngModel)]="book.edition" [disabled]="!isEdit"/>
+      </td>
+    </tr>
+    <tr>
+      <td>Date d'édition :</td>
+      <td>
+        <p-inputNumber id="editionDate" class="" [(ngModel)]="book.editionDate" [min]="1970" [max]="2100" [disabled]="!isEdit"/>
+      </td>
+    </tr>
+    <tr>
+      <td>Prix :</td>
+      <td>
+        <p-inputNumber id="price" mode="currency" currency="EUR" class="" [minFractionDigits]="2" [min]="0" [step]="0.01" [(ngModel)]="book.price" [disabled]="!isEdit"/>
+      </td>
+    </tr>
+    @for(author of book.authors; track $index){
+      @if($index == 0){
+        <tr>
+          <td>Author(s) :</td>
+          <td>
+            <input pInputText [value]="author.fullName" [disabled]="!isEdit">
+          </td>
+        </tr>
+      } @else {
+        <tr>
+          <td></td>
+          <td>
+            <input pInputText [value]="author.fullName" [disabled]="!isEdit">
+          </td>
+        </tr>
+      }
+    }
+    @for (genre of book.genres; track $index){
+      @if($index == 0){
+        <tr>
+          <td>Genre(s) :</td>
+          <td>
+            <input pInputText [value]="genre.gName" [disabled]="!isEdit">
+          </td>
+        </tr>
+      } @else {
+        <tr>
+          <td></td>
+          <td>
+            <input pInputText [value]="genre.gName" [disabled]="!isEdit">
+          </td>
+        </tr>
+      }
+    }
+    @for (library of book.libraries; track $index){
+      @if($index == 0){
+        <tr>
+          <td>Libraries dispo :</td>
+          <td>
+            <input pInputText [value]="library.city" [disabled]="!isEdit">
+          </td>
+        </tr>
+      } @else {
+        <tr>
+          <td></td>
+          <td>
+            <input pInputText [value]="library.city" [disabled]="!isEdit">
+          </td>
+        </tr>
+      }
+    }
+  </table>
+  <div class="flex justify-content-end gap-2">
+    <p-confirmPopup>
+      <ng-template pTemplate="headless" let-message let-test>
+        <div class="border-round p-3">
+          <span>{{ message.message }}</span>
+          <div class="flex align-items-center gap-2 mt-3">
+            <p-button (onClick)="accept()" label="Save" size="small" />
+            <p-button (onClick)="reject()" label="Cancel" [outlined]="true" size="small" />
+          </div>
+        </div>
+      </ng-template>
+    </p-confirmPopup>
+    <p-button label="Cancel" severity="secondary" (click)="!isEdit ? DialogCancel() : confirmPopupCancel($event)" />
+    <p-button label="Save" (click)="confirmPopupEdit($event)" [hidden]="!isEdit"/>
+  </div>
+</p-dialog>

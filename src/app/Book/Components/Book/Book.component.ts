@@ -1,24 +1,140 @@
-import { Component, Input } from '@angular/core';
+import {Component, inject, Input, OnInit, ViewChild} from '@angular/core';
 import { Book } from '../../Models/book';
 import { AuthService } from '../../../Auth/Services/auth.service';
+import {ConfirmPopup} from 'primeng/confirmpopup';
+import {ConfirmationService} from 'primeng/api';
+import {BookService} from '../../Services/book.service';
 
 @Component({
   selector: 'app-book',
   templateUrl: './Book.component.html',
   styleUrl: './Book.component.css',
+  providers: [ConfirmationService]
 })
-export class BookComponent {
-  _isAuth: boolean = false;
- 
-  constructor(private _auth : AuthService){
-    _auth.isConnectedSubject.subscribe({
-      next: (isAuth: boolean) =>{
-        console.log('isAuth', isAuth)
-        this._isAuth = isAuth
+export class BookComponent implements OnInit {
+  @Input() BookId: number = 0;
+  isAuth: boolean = false;
+  visibleDialog: boolean = false;
+  isEdit: boolean = false;
+  @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
+  book: Book = {
+    bookId: 0,
+    title: 'Book Title',
+    edition: 'First Edition',
+    editionDate: 2020,
+    price: 1.99,
+    authors: [
+      {
+        authorId: 1,
+        fullName: 'John Doe'
+      },
+      {
+        authorId: 2,
+        fullName: 'Jane Doe'
       }
-    })
-    _auth.emitIsConnected();
+    ],
+    genres: [
+      {
+        gName: 'Science Fiction'
+      },
+      {
+        gName: 'Fantasy'
+      },
+      {
+        gName: 'Adventure'
+      }
+    ],
+    libraries: [
+      {
+        libraryId: 1,
+        street: 'Main Street',
+        numberH: '123',
+        postalCode: '12345',
+        city: 'City',
+        country: 'Country',
+        stock: 10
+      },
+      {
+        libraryId: 2,
+        street: 'Second Street',
+        numberH: '456',
+        postalCode: '54321',
+        city: 'City1',
+        country: 'Country',
+        stock: 5
+      },
+      {
+        libraryId: 3,
+        street: 'Third Street',
+        numberH: '789',
+        postalCode: '67890',
+        city: 'City2',
+        country: 'Country',
+        stock: 15
+      }
+    ]
+  };
+  private _ConfirmationService: ConfirmationService = inject(ConfirmationService);
+  private _AuthService: AuthService = inject(AuthService);
+  private _BookService: BookService = inject(BookService);
+
+  ngOnInit(): void {
+    this._AuthService.isConnectedSubject.subscribe({
+      next: (isAuth: boolean) => {
+        this.isAuth = isAuth;
+      }
+    });
+    this._AuthService.emitIsConnected();
+    this._BookService.getBookById(this.BookId).subscribe({
+      next: (book: Book) => {
+        this.book = book;
+      }
+    });
   }
 
-  @Input() book: Book = { bookId: 0, title: '', edition: '', editionDate: 2000 ,price: 0 };
+  showDetailsDialog() {
+    this.visibleDialog = true;
+    this.isEdit = false;
+  }
+
+  DialogCancel() {
+    this.visibleDialog = false;
+  }
+
+  showEditDialog() {
+    this.visibleDialog = true;
+    this.isEdit = true;
+  }
+
+  accept() {
+    this.confirmPopup.accept();
+  }
+
+  reject() {
+    this.confirmPopup.reject();
+  }
+
+  confirmPopupEdit(event: Event) {
+    this._ConfirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Sauvegarder les modifications?',
+      accept: () => {
+        this.visibleDialog = false;
+      },
+      reject: () => {
+      }
+    });
+  }
+
+  confirmPopupCancel(event: Event) {
+    this._ConfirmationService.confirm({
+      target: event.target as EventTarget,
+      message: 'Annuler les modifications?',
+      accept: () => {
+        this.visibleDialog = false;
+      },
+      reject: () => {
+      }
+    });
+  }
 }

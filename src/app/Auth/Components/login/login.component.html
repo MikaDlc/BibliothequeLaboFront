@@ -1,28 +1,28 @@
 <div class="main">
-    <form [formGroup]="fg" (submit)="ValidLogin()">
-        <h1>Login</h1>
-        <div>
-            <p-inputGroup [ngClass]="(f['email'].touched && f['email'].errors) ? 'ErrorInput' : ''">
-                <p-inputGroupAddon>
-                    <i class="pi pi-at"></i>
-                </p-inputGroupAddon>
-                <input pInputText type="Email" placeholder="Email" formControlName="email" required/>
-            </p-inputGroup>
-            <div class="error" *ngIf="f['email']?.touched && f['email']?.errors">
-                <span *ngIf="f['email']?.errors?.['required']">Email is required</span>
-            </div>
+  <form [formGroup]="fg" (submit)="ValidLogin()">
+    <h1>Login</h1>
+    <div>
+      <p-inputGroup [ngClass]="(f['email'].touched && f['email'].errors) ? 'ErrorInput' : ''">
+        <p-inputGroupAddon>
+          <i class="pi pi-at"></i>
+        </p-inputGroupAddon>
+        <input pInputText type="Email" placeholder="Email" formControlName="email" required/>
+      </p-inputGroup>
+      <div class="error" *ngIf="f['email']?.touched && f['email']?.errors">
+        <span *ngIf="f['email']?.errors?.['required']">Email is required</span>
+      </div>
 
-            <p-inputGroup [ngClass]="(f['password'].touched && f['password'].errors) ? 'ErrorInput' : ''">
-                <p-inputGroupAddon><i [ngClass]="(visible == 'text') ? 'pi-unlock' : 'pi-lock'" class="pi pi-lock" (click)="isvisible()"></i></p-inputGroupAddon>
-                <input [type]="visible" pInputText placeholder="Password" formControlName="password" required/>
-            </p-inputGroup>
-            <div class="error" *ngIf="f['password']?.touched && f['password']?.errors">
-                <span *ngIf="f['password']?.errors?.['required']">Password is required</span>
-                <span *ngIf="f['password']?.errors?.['minlength']">Password must be at least 8 characters</span>
-            </div>
-        </div>
-        <p-button type="submit" label="Confirm" icon="pi pi-check" iconPos="right" [disabled]="fg.invalid"/>
-        <label (click)="Register()">Inscription</label>
-    </form>
+      <p-inputGroup [ngClass]="(f['password'].touched && f['password'].errors) ? 'ErrorInput' : ''">
+        <p-inputGroupAddon><i [ngClass]="(visible == 'text') ? 'pi-unlock' : 'pi-lock'" class="pi pi-lock" (click)="isvisible()"></i></p-inputGroupAddon>
+        <input [type]="visible" pInputText placeholder="Password" formControlName="password" required/>
+      </p-inputGroup>
+      <div class="error" *ngIf="f['password']?.touched && f['password']?.errors">
+        <span *ngIf="f['password']?.errors?.['required']">Password is required</span>
+        <span *ngIf="f['password']?.errors?.['minlength']">Password must be at least 8 characters</span>
+      </div>
+    </div>
+    <p-button type="submit" label="Confirm" icon="pi pi-check" iconPos="right" [loading]="loading" [disabled]="fg.invalid"/>
+    <label (click)="Register()">Inscription</label>
+  </form>
 </div>
 <p-toast></p-toast>

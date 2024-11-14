@@ -50,7 +50,7 @@
                 <span *ngIf="f['confirmPassword']?.errors?.['passwordMatch']">Password not same</span>
             </div>
         </div>
-        <p-button type="submit" label="Confirm" icon="pi pi-check" iconPos="right" [disabled]="fg.invalid"/>
+        <p-button type="submit" label="Confirm" icon="pi pi-check" iconPos="right" [loading]="loading" [disabled]="fg.invalid"/>
         <label (click)="Login()">Login</label>
     </form>
 </div>

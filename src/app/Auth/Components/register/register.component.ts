@@ -15,6 +15,7 @@ export class RegisterComponent {
   private $message: MessageService = inject(MessageService);
   private $router = inject(Router);
   private _AuthServices: AuthService = inject(AuthService);
+  loading: boolean = false;
   visible: string = "password";
   fg: FormGroup;
   constructor(fb: FormBuilder) {
@@ -54,6 +55,7 @@ export class RegisterComponent {
   }
 
   ValidRegister() {
+    this.loading = true;
     const user = {
       name: this.fg.value.name,
       firsName: this.fg.value.firstName,
@@ -63,9 +65,11 @@ export class RegisterComponent {
     this._AuthServices.register(user).subscribe({
       next: () => {
         this.Login();
+        this.loading = false;
       },
       error: (error) => {
         this.$message.add({ severity: 'error', summary: 'Error', detail: 'Register failed' });
+        this.loading = false;
       }
     });
   }

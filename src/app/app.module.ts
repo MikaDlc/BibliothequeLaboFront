@@ -10,6 +10,7 @@ import { LoginComponent } from './Auth/Components/login/login.component';
 import { NavBarComponent } from './shared/Components/nav-bar/nav-bar.component';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
+import { ButtonGroupModule } from 'primeng/buttongroup';
 import { RegisterComponent } from './Auth/Components/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
@@ -19,6 +20,15 @@ import { BookComponent } from './Book/Components/Book/Book.component';
 import { BookListComponent } from './Book/Components/BookList/BookList.component';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { AddButtonComponent } from './Book/Components/add-button/add-button.component';
+import { DialogModule } from 'primeng/dialog';
+import { NgOptimizedImage } from '@angular/common';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ChipsModule } from 'primeng/chips';
+import { DropdownModule } from 'primeng/dropdown';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @NgModule({
   declarations: [
@@ -28,7 +38,7 @@ import { AddButtonComponent } from './Book/Components/add-button/add-button.comp
     RegisterComponent,
     BookComponent,
     BookListComponent,
-    AddButtonComponent
+    AddButtonComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -43,7 +53,17 @@ import { AddButtonComponent } from './Book/Components/add-button/add-button.comp
     ReactiveFormsModule,
     ToastModule,
     CardModule,
-    TabMenuModule
+    TabMenuModule,
+    ButtonGroupModule,
+    DialogModule,
+    NgOptimizedImage,
+    InputTextModule,
+    InputNumberModule,
+    ChipsModule,
+    DropdownModule,
+    ConfirmPopupModule,
+    IconFieldModule,
+    InputIconModule
   ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent]

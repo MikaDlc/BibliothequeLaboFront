@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   private $message: MessageService = inject(MessageService);
+  loading: boolean = false;
   
   private _AuthServices: AuthService = inject(AuthService);
   private $router = inject(Router);
@@ -33,10 +34,15 @@ export class LoginComponent {
   }
   
   ValidLogin() {
+    this.loading = true;
     this._AuthServices.login(this.fg.value.email, this.fg.value.password).subscribe({
-      next: () => this._AuthServices.emitIsConnected(),
-      error: (error) => {
+      next: () => {
+        this._AuthServices.emitIsConnected(); 
+        this.loading = false;
+      },
+      error: () => {
         this.$message.add({ severity: 'error', summary: 'Error', detail: 'Login or password is invalid' });
+        this.loading = false;
       }
     });
   }

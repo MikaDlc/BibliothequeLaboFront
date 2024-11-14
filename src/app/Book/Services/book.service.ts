@@ -13,4 +13,12 @@ export class BookService {
   getBooks() {
     return this._client.get<Book[]>(this._url).pipe();
   }
+
+  getBookById(id: number) {
+    return this._client.get<Book>(`${this._url}/${id}`).pipe();
+  }
+
+  addBook(book: Book) {
+    return this._client.post<Book>(this._url, book).pipe();
+  }
 }
