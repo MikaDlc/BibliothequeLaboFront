@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   private $message: MessageService = inject(MessageService);
   loading: boolean = false;
-  
+
   private _AuthServices: AuthService = inject(AuthService);
   private $router = inject(Router);
   visible: string = "password";
@@ -24,7 +24,7 @@ export class LoginComponent {
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
-  
+
   isvisible() {
     if (this.visible == 'password') {
       this.visible = 'text';
@@ -32,12 +32,12 @@ export class LoginComponent {
       this.visible = 'password';
     }
   }
-  
+
   ValidLogin() {
     this.loading = true;
     this._AuthServices.login(this.fg.value.email, this.fg.value.password).subscribe({
       next: () => {
-        this._AuthServices.emitIsConnected(); 
+        this._AuthServices.emitIsConnected();
         this.loading = false;
       },
       error: () => {
@@ -45,6 +45,7 @@ export class LoginComponent {
         this.loading = false;
       }
     });
+    this.$router.navigate(['/', 'Books', 'All']);
   }
 
   Register() {

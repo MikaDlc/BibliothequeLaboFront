@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -29,6 +29,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { tokenInterceptor } from './Auth/Interceptors/token.interceptor';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,11 @@ import { InputIconModule } from 'primeng/inputicon';
     IconFieldModule,
     InputIconModule
   ],
-  providers: [provideHttpClient()],
+  providers: [
+    provideHttpClient(
+    withInterceptors([tokenInterceptor]),
+    ),
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

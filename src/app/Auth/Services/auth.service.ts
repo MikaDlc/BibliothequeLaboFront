@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { RedirectCommand } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { Injectable } from '@angular/core';
 import { Subject, tap } from 'rxjs';
 import { User } from '../Models/User';
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
