@@ -16,7 +16,6 @@ export const authGuard = function (role: string = 'User'): CanActivateFn  {
       if (userRole !== role) {
         return _Router.navigate(['/', 'Auth', 'Login']);
       }
-
       return true;
     } else {
       return _Router.navigate(['/', 'Auth', 'Login']);

@@ -39,13 +39,13 @@ export class LoginComponent {
       next: () => {
         this._AuthServices.emitIsConnected();
         this.loading = false;
+        this.$router.navigate(['/', 'Books', 'All']);
       },
       error: () => {
         this.$message.add({ severity: 'error', summary: 'Error', detail: 'Login or password is invalid' });
         this.loading = false;
       }
     });
-    this.$router.navigate(['/', 'Books', 'All']);
   }
 
   Register() {

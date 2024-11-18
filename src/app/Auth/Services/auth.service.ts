@@ -36,4 +36,11 @@ export class AuthService {
   emitIsConnected() {
     this.isConnectedSubject.next(this.isConnected);
   }
+
+  isAdmin() {
+    const token = localStorage.getItem('token');
+    const user : any = jwtDecode(token!);
+    const userRole = user['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    return userRole === 'Admin';
+  }
 }

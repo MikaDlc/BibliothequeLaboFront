@@ -17,6 +17,7 @@ import {Library} from '../../Models/library';
 })
 export class BookListComponent implements OnInit {
   isAuth: boolean = false;
+  isAdmin: boolean = false;
   books: Book[] = [];
   visibleDialog: boolean = false;
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
@@ -58,6 +59,7 @@ export class BookListComponent implements OnInit {
     this.Authors.sort((a, b) => a.fullName.localeCompare(b.fullName));
     this.Genres.sort((a, b) => a.gName.localeCompare(b.gName));
     this.Libraries.sort((a, b) => a.city.localeCompare(b.city));
+    this.isAdmin = this._AuthService.isAdmin();
   }
 
   getBooks() {
