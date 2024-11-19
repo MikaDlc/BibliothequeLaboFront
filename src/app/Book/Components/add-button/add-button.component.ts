@@ -7,12 +7,14 @@ import { AuthService } from '../../../Auth/Services/auth.service';
   styleUrl: './add-button.component.css'
 })
 export class AddButtonComponent implements OnInit {
+  private $authService: AuthService = inject(AuthService);
+
   @Output() addBook = new EventEmitter<void>();
-  private _AuthService: AuthService = inject(AuthService);
+
   isAuth: boolean = false;
-  
+
   ngOnInit(): void {
-    this._AuthService.isConnectedSubject.subscribe({
+    this.$authService.isConnectedSubject.subscribe({
       next: (isAuth: boolean) => {
         this.isAuth = isAuth;
       }

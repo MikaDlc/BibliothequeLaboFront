@@ -12,11 +12,16 @@ import {BookService} from '../../Services/book.service';
   providers: [ConfirmationService]
 })
 export class BookComponent implements OnInit {
+  private $confirmationService: ConfirmationService = inject(ConfirmationService);
+  private $authService: AuthService = inject(AuthService);
+  private $bookService: BookService = inject(BookService);
+
   @Input() BookId: number = 0;
+  @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
+
   isAuth: boolean = false;
   visibleDialog: boolean = false;
   isEdit: boolean = false;
-  @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
   book: Book = {
     bookId: 0,
     title: 'Book Title',
@@ -26,11 +31,13 @@ export class BookComponent implements OnInit {
     authors: [
       {
         authorId: 1,
-        fullName: 'John Doe'
+        firstName: 'John',
+        name: 'Doe'
       },
       {
         authorId: 2,
-        fullName: 'Jane Doe'
+        firstName: 'Jane',
+        name: 'Doe'
       }
     ],
     genres: [
@@ -74,18 +81,15 @@ export class BookComponent implements OnInit {
       }
     ]
   };
-  private _ConfirmationService: ConfirmationService = inject(ConfirmationService);
-  private _AuthService: AuthService = inject(AuthService);
-  private _BookService: BookService = inject(BookService);
 
   ngOnInit(): void {
-    this._AuthService.isConnectedSubject.subscribe({
+    this.$authService.isConnectedSubject.subscribe({
       next: (isAuth: boolean) => {
         this.isAuth = isAuth;
       }
     });
-    this._AuthService.emitIsConnected();
-    this._BookService.getBookById(this.BookId).subscribe({
+    this.$authService.emitIsConnected();
+    this.$bookService.getBookById(this.BookId).subscribe({
       next: (book: Book) => {
         this.book = book;
       }
@@ -115,7 +119,7 @@ export class BookComponent implements OnInit {
   }
 
   confirmPopupEdit(event: Event) {
-    this._ConfirmationService.confirm({
+    this.$confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Sauvegarder les modifications?',
       accept: () => {
@@ -127,7 +131,7 @@ export class BookComponent implements OnInit {
   }
 
   confirmPopupCancel(event: Event) {
-    this._ConfirmationService.confirm({
+    this.$confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Annuler les modifications?',
       accept: () => {

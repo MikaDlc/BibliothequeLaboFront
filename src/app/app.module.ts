@@ -30,6 +30,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { tokenInterceptor } from './Auth/Interceptors/token.interceptor';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { tokenInterceptor } from './Auth/Interceptors/token.interceptor';
     DropdownModule,
     ConfirmPopupModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
+    ConfirmDialogModule,
   ],
   providers: [
     provideHttpClient(

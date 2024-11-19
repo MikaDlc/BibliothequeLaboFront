@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { Subject, tap } from 'rxjs';
 import { User } from '../Models/User';
 import { jwtDecode } from "jwt-decode";
@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
 })
 export class AuthService {
 
+  private $client: HttpClient = inject(HttpClient);
   private _url = 'https://localhost:7262/api/Auth/';
   isConnectedSubject: Subject<boolean> = new Subject<boolean>();
 
@@ -16,10 +17,8 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 
-  constructor(private client: HttpClient) { }
-
   login(email: string, password: string) {
-    return this.client.post<{ accessToken: string}>(this._url + 'Login', { email, password }).pipe(
+    return this.$client.post<{ accessToken: string}>(this._url + 'Login', { email, password }).pipe(
       tap(res => localStorage.setItem('token', res.accessToken))
     );
   }
@@ -30,7 +29,7 @@ export class AuthService {
   }
 
   register(user: User) {
-    return this.client.post(this._url + 'Register', user)
+    return this.$client.post(this._url + 'Register', user)
   }
 
   emitIsConnected() {

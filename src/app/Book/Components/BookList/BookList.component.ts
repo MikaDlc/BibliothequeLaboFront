@@ -7,6 +7,9 @@ import {ConfirmPopup} from 'primeng/confirmpopup';
 import {Author} from '../../Models/author';
 import {Genre} from '../../Models/genre';
 import {Library} from '../../Models/library';
+import {AuthorService} from '../../Services/author.service';
+import {GenreService} from '../../Services/genre.service';
+import {LibraryService} from '../../Services/library.service';
 
 @Component({
   selector: 'app-book-list',
@@ -16,31 +19,26 @@ import {Library} from '../../Models/library';
   encapsulation:ViewEncapsulation.None
 })
 export class BookListComponent implements OnInit {
+  private $confirmationService: ConfirmationService = inject(ConfirmationService);
+  private $bookService: BookService = inject(BookService);
+  private $authService: AuthService = inject(AuthService);
+  private $authorService: AuthorService = inject(AuthorService);
+  private $genreService: GenreService = inject(GenreService);
+  private $libraryService: LibraryService = inject(LibraryService);
+
+  @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
+
   isAuth: boolean = false;
   isAdmin: boolean = false;
   books: Book[] = [];
   visibleDialog: boolean = false;
-  @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
   newBook: Partial<Book> = {};
 
-  private _ConfirmationService: ConfirmationService = inject(ConfirmationService);
-  private _bookService: BookService = inject(BookService);
-  private _AuthService: AuthService = inject(AuthService);
   NewAuthor!: Author | null;
   NewGenre!: Genre | null;
   NewLibrary!: Library | null;
-  Authors: Author[] = [
-    { authorId: 1, fullName: 'John Doe' },
-    { authorId: 2, fullName: 'Jane Doe' },
-    { authorId: 3, fullName: 'Alice Doe' },
-    { authorId: 4, fullName: 'Bob Doe' },
-  ];
-  Genres: Genre[] = [
-    { gName: 'Science Fiction' },
-    { gName: 'Fantasy' },
-    { gName: 'Mystery' },
-    { gName: 'Thriller' },
-  ];
+  Authors!: Author[];
+  Genres!: Genre[];
   Libraries: Library[] = [
     { libraryId: 1, city: 'Paris', country: 'France', numberH: '10', street: 'Rue de Paris', stock: 10, postalCode: '6000' },
     { libraryId: 2, city: 'Lyon', country: 'France', numberH: '10', street: 'Rue de Lyon', stock: 10, postalCode: '6900' },
@@ -50,26 +48,41 @@ export class BookListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getBooks();
-    this._AuthService.isConnectedSubject.subscribe({
+    this.$authService.isConnectedSubject.subscribe({
       next: (isAuth: boolean) => {
         this.isAuth = isAuth;
       }
     });
-    this._AuthService.emitIsConnected();
-    this.Authors.sort((a, b) => a.fullName.localeCompare(b.fullName));
-    this.Genres.sort((a, b) => a.gName.localeCompare(b.gName));
-    this.Libraries.sort((a, b) => a.city.localeCompare(b.city));
-    this.isAdmin = this._AuthService.isAdmin();
+    this.$authService.emitIsConnected();
+    this.$authorService.getAuthors().subscribe({
+      next: (authors) => {
+        this.Authors = authors;
+        this.Authors.sort((a, b) => a.firstName.localeCompare(b.firstName));
+      }
+    });
+    this.$genreService.getGenres().subscribe({
+      next: (genres) => {
+        this.Genres = genres;
+        this.Genres.sort((a, b) => a.gName.localeCompare(b.gName));
+      }
+    });
+    this.$libraryService.getLibraries().subscribe({
+      next: (libraries) => {
+        this.Libraries = libraries;
+        this.Libraries.sort((a, b) => a.city.localeCompare(b.city));
+      }
+    });
+    this.isAdmin = this.$authService.isAdmin();
   }
 
   getBooks() {
-    this._bookService.getBooks().subscribe({
+    this.$bookService.getBooks().subscribe({
       next: (books) => this.books = books
     });
   }
 
   confirmPopupCancel(event: MouseEvent) {
-    this._ConfirmationService.confirm({
+    this.$confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Annuler les modifications?',
       accept: () => {
@@ -81,7 +94,7 @@ export class BookListComponent implements OnInit {
   }
 
   confirmPopupAdd(event: MouseEvent) {
-    this._ConfirmationService.confirm({
+    this.$confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Ajouter le livre?',
       accept: () => {
@@ -115,7 +128,7 @@ export class BookListComponent implements OnInit {
       this.newBook.authors?.splice(index!, 1);
     }
     this.Authors.push(author);
-    this.Authors.sort((a, b) => a.fullName.localeCompare(b.fullName));
+    this.Authors.sort((a, b) => a.firstName.localeCompare(b.firstName));
   }
 
   addAuthor() {

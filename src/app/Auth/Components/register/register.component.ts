@@ -11,13 +11,15 @@ import { Router } from '@angular/router';
   providers: [MessageService]
 })
 export class RegisterComponent {
-  
+
   private $message: MessageService = inject(MessageService);
   private $router = inject(Router);
-  private _AuthServices: AuthService = inject(AuthService);
+  private $authServices: AuthService = inject(AuthService);
+
   loading: boolean = false;
   visible: string = "password";
   fg: FormGroup;
+
   constructor(fb: FormBuilder) {
     this.fg = fb.group({
       name: ['', [Validators.required]],
@@ -45,7 +47,7 @@ export class RegisterComponent {
     }
     return null;
   }
-  
+
   isvisible() {
     if (this.visible == 'password') {
       this.visible = 'text';
@@ -62,12 +64,12 @@ export class RegisterComponent {
       email: this.fg.value.email,
       password: this.fg.value.password
     }
-    this._AuthServices.register(user).subscribe({
+    this.$authServices.register(user).subscribe({
       next: () => {
         this.Login();
         this.loading = false;
       },
-      error: (error) => {
+      error: () => {
         this.$message.add({ severity: 'error', summary: 'Error', detail: 'Register failed' });
         this.loading = false;
       }

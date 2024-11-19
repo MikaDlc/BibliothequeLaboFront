@@ -48,15 +48,21 @@
                       optionLabel="fullName"
                       placeholder="Choisit un auteur"
                       appendTo="body"
-                      (ngModelChange)="addAuthor()"
-          />
+                      (ngModelChange)="addAuthor()">
+            <ng-template let-author pTemplate="item">
+              <div>{{ author.firstName }} {{ author.name }}</div>
+            </ng-template>
+          </p-dropdown>
+        </td>
+        <td class="addButton">
+          <i class="pi pi-plus"></i>
         </td>
       </tr>
       @for (author of newBook.authors; track $index) {
         <tr>
           <td></td>
           <td>
-            <input pInputText [value]="author.fullName" [disabled]="true">
+            <input pInputText [value]="author.firstName + ' ' + author.name" [disabled]="true">
           </td>
           <td class="Cross">
             <p-inputIcon styleClass="pi pi-times" (click)="DeleteAuthor(author)"/>
@@ -74,6 +80,9 @@
                       (ngModelChange)="addGenre()"
           />
         </td>
+        <td class="addButton">
+          <i class="pi pi-plus"></i>
+        </td>
       </tr>
       @for (genre of newBook.genres; track $index) {
         <tr>
@@ -87,7 +96,7 @@
         </tr>
       }
       <tr>
-        <td>Librairie :</td>
+        <td>Librairie dispo :</td>
         <td>
           <p-dropdown [options]="Libraries"
                       [(ngModel)]="NewLibrary"
@@ -96,6 +105,9 @@
                       appendTo="body"
                       (ngModelChange)="addLibrary()"
           />
+        </td>
+        <td class="addButton">
+          <i class="pi pi-plus"></i>
         </td>
       </tr>
       @for (library of newBook.libraries; track $index) {
@@ -110,7 +122,7 @@
         </tr>
       }
     </table>
-    <div class="flex justify-content-end gap-2">
+    <div class="flex justify-content-end gap-2 pt-2">
       <p-confirmPopup>
         <ng-template pTemplate="headless" let-message let-test>
           <div class="border-round p-3">
@@ -126,4 +138,9 @@
       <p-button label="Save" (click)="confirmPopupAdd($event)"/>
     </div>
   </p-dialog>
+
+  <p-confirmDialog
+    key="positionDialog"
+    position="top-left"
+    rejectButtonStyleClass="p-button-outlined" />
 }

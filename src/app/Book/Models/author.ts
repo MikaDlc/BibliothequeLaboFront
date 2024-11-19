@@ -1,4 +1,5 @@
 export interface Author {
   authorId: number
-  fullName: string
+  firstName: string
+  name: string
 }

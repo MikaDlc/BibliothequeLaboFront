@@ -12,12 +12,13 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   private $message: MessageService = inject(MessageService);
-  loading: boolean = false;
-
-  private _AuthServices: AuthService = inject(AuthService);
+  private $authServices: AuthService = inject(AuthService);
   private $router = inject(Router);
+
+  loading: boolean = false;
   visible: string = "password";
   fg: FormGroup;
+
   constructor(fb: FormBuilder) {
     this.fg = fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,9 +36,9 @@ export class LoginComponent {
 
   ValidLogin() {
     this.loading = true;
-    this._AuthServices.login(this.fg.value.email, this.fg.value.password).subscribe({
+    this.$authServices.login(this.fg.value.email, this.fg.value.password).subscribe({
       next: () => {
-        this._AuthServices.emitIsConnected();
+        this.$authServices.emitIsConnected();
         this.loading = false;
         this.$router.navigate(['/', 'Books', 'All']);
       },

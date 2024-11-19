@@ -38,21 +38,16 @@
       </td>
     </tr>
     @for(author of book.authors; track $index){
-      @if($index == 0){
-        <tr>
+      <tr>
+        @if($index == 0) {
           <td>Author(s) :</td>
-          <td>
-            <input pInputText [value]="author.fullName" [disabled]="!isEdit">
-          </td>
-        </tr>
-      } @else {
-        <tr>
+        } @else {
           <td></td>
-          <td>
-            <input pInputText [value]="author.fullName" [disabled]="!isEdit">
-          </td>
-        </tr>
-      }
+        }
+        <td>
+          <input pInputText [value]="author.firstName + ' ' + author.name" [disabled]="!isEdit">
+        </td>
+      </tr>
     }
     @for (genre of book.genres; track $index){
       @if($index == 0){
@@ -89,7 +84,7 @@
       }
     }
   </table>
-  <div class="flex justify-content-end gap-2">
+  <div class="flex justify-content-end gap-2 pt-2">
     <p-confirmPopup>
       <ng-template pTemplate="headless" let-message let-test>
         <div class="border-round p-3">
