@@ -1,0 +1,34 @@
+.main {
+  margin-left: auto;
+  margin-right: auto;
+  padding : 20px;
+  background-color: white;
+  width: 50%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+p-progressspinner {
+  display: flex;
+}
+
+p-floatLabel {
+  margin-top: 30px;
+}
+
+.error {
+  border: solid 2px #e24c4c;
+}

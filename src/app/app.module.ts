@@ -31,6 +31,8 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { tokenInterceptor } from './Auth/Interceptors/token.interceptor';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ProfileComponent } from './Client/Components/profile/profile.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     BookComponent,
     BookListComponent,
     AddButtonComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -67,6 +70,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     IconFieldModule,
     InputIconModule,
     ConfirmDialogModule,
+    ProgressSpinnerModule,
   ],
   providers: [
     provideHttpClient(

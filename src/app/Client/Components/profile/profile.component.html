@@ -1,0 +1,55 @@
+<div class="main" [ngClass]="">
+  <h1>Profile</h1>
+  @if (user){
+    <p> Vous êtes connecté en tant que {{ user.firsName }} {{ user.name }}</p>
+    <form [formGroup]="fg">
+      <p-floatLabel>
+        <input id="email" type="text" pInputText formControlName="email"/>
+        <label for="email">Email</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="password" type="password" pInputText value="********" [disabled]="true"/>
+        <label for="password">Password</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="name" type="text" pInputText formControlName="name" [disabled]="true"/>
+        <label for="name">Name</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="firstame" type="text" pInputText formControlName="firstName" />
+        <label for="firstame">Prenom</label>
+      </p-floatLabel>
+      <div class="flex flex-row align-items-center justify-content-center">
+        <h4>Adresse :</h4>
+        <i class="pi pi-pencil ml-3" [ngClass]="editAdress ? 'hidden' : ''" (click)="enableAdress()"></i>
+        <i class="pi pi-check ml-3" [ngClass]="editAdress ? '' : 'hidden'" (click)="updateAdress()"></i>
+      </div>
+      <p-floatLabel>
+        <input id="street" type="text" pInputText formControlName="street"/>
+        <label for="street">Rue</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="number" type="text" pInputText formControlName="numberH" />
+        <label for="number">Numéro</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="cp" type="text" pInputText formControlName="postalCode" />
+        <label for="cp">Code postal</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="city" type="text" pInputText formControlName="city" />
+        <label for="city">Ville</label>
+      </p-floatLabel>
+      <p-floatLabel>
+        <input id="country" type="text" pInputText formControlName="country" />
+        <label for="country">Pays</label>
+      </p-floatLabel>
+    </form>
+  } @else {
+    <p-progressSpinner
+      styleClass="w-4rem h-4rem m-auto"
+      strokeWidth="8"
+      fill="var(--surface-ground)"
+      animationDuration=".5s" />
+  }
+</div>

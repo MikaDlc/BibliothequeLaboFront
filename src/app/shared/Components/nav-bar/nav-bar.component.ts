@@ -41,7 +41,7 @@ export class NavBarComponent implements OnInit {
       } else {
         this.items = [
           { label: 'Books', icon: 'pi pi-fw pi-book', routerLink: '/Books/All' },
-          { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: '/Auth/Profile' },
+          { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: '/Client/Profile' },
         ];
         this.activeItem = this.items[0];
       }
