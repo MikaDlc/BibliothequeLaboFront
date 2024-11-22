@@ -11,4 +11,5 @@ export interface Book {
   authors: Author[]
   genres: Genre[]
   libraries: Library[]
+  libraryQuantity: number[]
 }

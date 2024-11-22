@@ -18,6 +18,21 @@ export class BookService {
   }
 
   addBook(book: Book) {
-    return this.$client.post<Book>(this._url, book).pipe();
+    let newBook = {
+      title: this.majTheFirstLetter(book.title),
+      edition: this.majTheFirstLetter(book.edition),
+      editionDate: book.editionDate,
+      price: book.price,
+      authors: book.authors.map(author => author.authorId),
+      genres: book.genres.map(genre => this.majTheFirstLetter(genre.gName)),
+      libraries: book.libraries.map(library => library.libraryID),
+      libraryQuantity: book.libraries.map(library => library.stock)
+    }
+    return this.$client.post<Book>(this._url, newBook).pipe();
+  }
+
+  private majTheFirstLetter(str: string) {
+    str = str.trim();
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }

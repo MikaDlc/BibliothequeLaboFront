@@ -1,5 +1,5 @@
 export interface Library {
-  libraryId: number
+  libraryID: number
   street: string
   numberH : string
   postalCode: string

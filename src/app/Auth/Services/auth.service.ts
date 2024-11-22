@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.$client.post<{ accessToken: string}>(this._url + 'Login', { email, password }).pipe(
+    return this.$client.post<{ accessToken: string }>(this._url + 'Login', { email, password }).pipe(
       tap(res => localStorage.setItem('token', res.accessToken))
     );
   }

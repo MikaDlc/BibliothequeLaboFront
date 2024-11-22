@@ -12,4 +12,17 @@ export class AuthorService {
   getAuthors() {
     return this.$client.get<Author[]>(this._url).pipe();
   }
+
+  addAuthor(newAuthor: Author) {
+
+    try {
+      newAuthor.firstName = newAuthor.firstName.trim();
+      newAuthor.name = newAuthor.name.trim();
+      newAuthor.firstName = newAuthor.firstName.charAt(0).toUpperCase() + newAuthor.firstName.slice(1);
+      newAuthor.name = newAuthor.name.charAt(0).toUpperCase() + newAuthor.name.slice(1);
+      return this.$client.post<Author>(this._url, newAuthor).pipe();
+    } catch (e) {
+      throw new Error('Error while adding author');
+    }
+  }
 }

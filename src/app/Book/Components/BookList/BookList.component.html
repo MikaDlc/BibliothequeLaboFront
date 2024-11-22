@@ -15,39 +15,63 @@
 @if (isAdmin) {
   <app-add-button (addBook)="ShowAddDialog()"></app-add-button>
 
-  <p-dialog header="Ajout d'un livre" [modal]="true" [(visible)]="visibleDialog" [style]="{ width: '26rem' }">
+  <p-dialog header="Ajout d'un livre" [modal]="true" [(visible)]="visibleAddDialog" [style]="{ width: '27rem' }">
     <table>
       <tr>
         <td>Titre :</td>
         <td>
-          <input pInputText [(ngModel)]="newBook.title"/>
+          <input pInputText [ngClass]="error[0] ? 'error' : ''" [(ngModel)]="newBook.title"/>
         </td>
       <tr>
         <td>Édition :</td>
         <td>
-          <input pInputText [(ngModel)]="newBook.edition"/>
+          <input pInputText [ngClass]="error[1] ? 'error' : ''" [(ngModel)]="newBook.edition"/>
         </td>
       </tr>
       <tr>
         <td>Date d'édition :</td>
         <td>
-          <p-inputNumber class="" [(ngModel)]="newBook.editionDate" [min]="1970" [max]="2100"/>
+          <p-inputNumber
+            styleClass="input-num"
+            [ngClass]="error[2] ? 'error' : ''"
+            [(ngModel)]="newBook.editionDate"
+            [min]="1970"
+            [max]="max"
+            [useGrouping]="false"
+            step="1"
+            [showButtons]="true"
+            decrementButtonClass="p-button-secondary"
+            incrementButtonClass="p-button-secondary"
+          />
         </td>
       </tr>
       <tr>
         <td>Prix :</td>
         <td>
-          <p-inputNumber mode="currency" currency="EUR" class="" [minFractionDigits]="2" [min]="0" [step]="0.01" [(ngModel)]="newBook.price"/>
+          <p-inputNumber
+            mode="currency"
+            styleClass="input-num"
+            currency="EUR"
+            [ngClass]="error[3] ? 'error' : ''"
+            [minFractionDigits]="2"
+            [min]="0"
+            step="0.01"
+            [(ngModel)]="newBook.price"
+            [showButtons]="true"
+            decrementButtonClass="p-button-secondary"
+            incrementButtonClass="p-button-secondary"
+          />
         </td>
       </tr>
       <tr>
         <td>Author(s):</td>
-        <td>
+        <td [ngClass]="error[4] ? 'error p-0' : ''">
           <p-dropdown [options]="Authors"
                       [(ngModel)]="NewAuthor"
                       optionLabel="fullName"
                       placeholder="Choisit un auteur"
                       appendTo="body"
+
                       (ngModelChange)="addAuthor()">
             <ng-template let-author pTemplate="item">
               <div>{{ author.firstName }} {{ author.name }}</div>
@@ -55,7 +79,7 @@
           </p-dropdown>
         </td>
         <td class="addButton">
-          <i class="pi pi-plus"></i>
+          <i class="pi pi-plus" (click)="showDialogAddAuthor()"></i>
         </td>
       </tr>
       @for (author of newBook.authors; track $index) {
@@ -71,17 +95,18 @@
       }
       <tr>
         <td>Genre :</td>
-        <td>
+        <td [ngClass]="error[5] ? 'error p-0' : ''">
           <p-dropdown [options]="Genres"
                       [(ngModel)]="NewGenre"
                       optionLabel="gName"
                       placeholder="Choisit un genre"
                       appendTo="body"
+
                       (ngModelChange)="addGenre()"
           />
         </td>
         <td class="addButton">
-          <i class="pi pi-plus"></i>
+          <i class="pi pi-plus" (click)="showDialogAddGenre()"></i>
         </td>
       </tr>
       @for (genre of newBook.genres; track $index) {
@@ -97,17 +122,18 @@
       }
       <tr>
         <td>Librairie dispo :</td>
-        <td>
+        <td [ngClass]="error[6] ? 'error p-0' : ''">
           <p-dropdown [options]="Libraries"
                       [(ngModel)]="NewLibrary"
                       optionLabel="city"
                       placeholder="Choisit une librairie"
                       appendTo="body"
+
                       (ngModelChange)="addLibrary()"
           />
         </td>
         <td class="addButton">
-          <i class="pi pi-plus"></i>
+          <i class="pi pi-plus" (click)="showDialogAddLibrary()"></i>
         </td>
       </tr>
       @for (library of newBook.libraries; track $index) {
@@ -120,6 +146,22 @@
             <p-inputIcon styleClass="pi pi-times" (click)="DeleteLibrary(library)"/>
           </td>
         </tr>
+        <tr>
+          <td>Stock :</td>
+          <td>
+            <p-inputNumber
+              [(ngModel)]="library.stock"
+              [showButtons]="true"
+              styleClass="input-stock text-center"
+              buttonLayout="horizontal"
+              inputId="horizontal"
+              min="1"
+              decrementButtonClass="p-button-secondary"
+              incrementButtonClass="p-button-secondary"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus" />
+          </td>
+        </tr>
       }
     </table>
     <div class="flex justify-content-end gap-2 pt-2">
@@ -128,19 +170,97 @@
           <div class="border-round p-3">
             <span>{{ message.message }}</span>
             <div class="flex align-items-center gap-2 mt-3">
-              <p-button (onClick)="accept()" label="Save" size="small"/>
-              <p-button (onClick)="reject()" label="Cancel" [outlined]="true" size="small"/>
+              <p-button (onClick)="accept()" label="Save" [loading]="load" size="small"/>
+              <p-button (onClick)="reject()" label="Cancel" [disabled]="load" [outlined]="true" size="small"/>
             </div>
           </div>
         </ng-template>
       </p-confirmPopup>
-      <p-button label="Cancel" severity="secondary" (click)="confirmPopupCancel($event)"/>
-      <p-button label="Save" (click)="confirmPopupAdd($event)"/>
+      <p-button label="Cancel" severity="secondary" (click)="confirmPopupAddCancel($event)"/>
+      <p-button label="Save" (click)="confirmPopupAddSave($event)"/>
     </div>
   </p-dialog>
 
-  <p-confirmDialog
-    key="positionDialog"
-    position="top-left"
-    rejectButtonStyleClass="p-button-outlined" />
+  <p-dialog header="Ajout d'un auteur"
+    [modal]="true"
+    [(visible)]="visibleAddAuthorDialog"
+    position="top"
+    [style]="{ width: '25rem' }">
+    <div class="flex align-items-center gap-3 mb-3 mt-1">
+      <label for="name" class="font-semibold w-6rem">
+        Nom :
+      </label>
+      <input pInputText id="name" [(ngModel)]="newAuthor.name" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex align-items-center gap-3 mb-5">
+      <label for="firstName" class="font-semibold w-6rem">
+        Prénom :
+      </label>
+      <input pInputText id="firstName" [(ngModel)]="newAuthor.firstName" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <p-button label="Cancel" severity="secondary" (onClick)="showAuthorCancelDialog()" />
+      <p-button label="Save" (onClick)="showAuthorSaveDialog()" />
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Ajout d'un genre"
+    [modal]="true"
+    [(visible)]="visibleAddGenreDialog"
+    position="top"
+    [style]="{ width: '25rem' }">
+    <div class="flex align-items-center gap-3 mb-3 mt-1">
+      <label for="Gname" class="font-semibold w-6rem">
+        Genre :
+      </label>
+      <input pInputText id="Gname" [(ngModel)]="newGenre.gName" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <p-button label="Cancel" severity="secondary" (onClick)="showGenreCancelDialog()" />
+      <p-button label="Save" (onClick)="showGenreSaveDialog()" />
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Ajout d'une librairie"
+    [modal]="true"
+    [(visible)]="visibleAddLibraryDialog"
+    position="top"
+    [style]="{ width: '25rem' }">
+    <div class="flex align-items-center gap-3 mb-3 mt-1">
+      <label for="street" class="font-semibold w-7rem">
+        Rue :
+      </label>
+      <input pInputText id="street" [(ngModel)]="newLibrary.street" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex align-items-center gap-3 mb-3 mt-1">
+      <label for="numberH" class="font-semibold w-7rem">
+        N° :
+      </label>
+      <input pInputText id="numberH" [(ngModel)]="newLibrary.numberH" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex align-items-center gap-3 mb-3 mt-1">
+      <label for="cp" class="font-semibold w-7rem">
+        Code postal :
+      </label>
+      <input pInputText id="cp" [(ngModel)]="newLibrary.postalCode" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex align-items-center gap-3 mb-3 mt-1">
+      <label for="city" class="font-semibold w-7rem">
+        Ville :
+      </label>
+      <input pInputText id="city" [(ngModel)]="newLibrary.city" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex align-items-center gap-3 mb-3 mt-1">
+      <label for="country" class="font-semibold w-7rem">
+        Pays :
+      </label>
+      <input pInputText id="country" [(ngModel)]="newLibrary.country" class="flex-auto" autocomplete="off" />
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <p-button label="Cancel" severity="secondary" (onClick)="showLibraryCancelDialog()" />
+      <p-button label="Save" (onClick)="showLibrarySaveDialog()" />
+    </div>
+  </p-dialog>
 }
+
+<p-toast/>

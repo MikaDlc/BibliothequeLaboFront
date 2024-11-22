@@ -53,7 +53,7 @@ export class BookComponent implements OnInit {
     ],
     libraries: [
       {
-        libraryId: 1,
+        libraryID: 1,
         street: 'Main Street',
         numberH: '123',
         postalCode: '12345',
@@ -62,7 +62,7 @@ export class BookComponent implements OnInit {
         stock: 10
       },
       {
-        libraryId: 2,
+        libraryID: 2,
         street: 'Second Street',
         numberH: '456',
         postalCode: '54321',
@@ -71,7 +71,7 @@ export class BookComponent implements OnInit {
         stock: 5
       },
       {
-        libraryId: 3,
+        libraryID: 3,
         street: 'Third Street',
         numberH: '789',
         postalCode: '67890',
@@ -79,7 +79,8 @@ export class BookComponent implements OnInit {
         country: 'Country',
         stock: 15
       }
-    ]
+    ],
+    libraryQuantity: []
   };
 
   ngOnInit(): void {

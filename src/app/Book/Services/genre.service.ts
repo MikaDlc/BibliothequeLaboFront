@@ -12,4 +12,14 @@ export class GenreService {
   getGenres() {
     return this.$client.get<Genre[]>(this._url).pipe();
   }
+
+  addGenre(newGenre: Genre) {
+    try {
+      newGenre.gName = newGenre.gName.trim();
+      newGenre.gName = newGenre.gName.charAt(0).toUpperCase() + newGenre.gName.slice(1);
+      return this.$client.post<Genre>(this._url, newGenre).pipe();
+    } catch (e) {
+      throw new Error('Error while adding genre');
+    }
+  }
 }

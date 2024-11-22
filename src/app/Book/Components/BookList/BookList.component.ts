@@ -2,7 +2,7 @@ import {Component, inject, OnInit, ViewChild, ViewEncapsulation} from '@angular/
 import { Book } from '../../Models/book';
 import { BookService } from '../../Services/book.service';
 import { AuthService } from '../../../Auth/Services/auth.service';
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {ConfirmPopup} from 'primeng/confirmpopup';
 import {Author} from '../../Models/author';
 import {Genre} from '../../Models/genre';
@@ -15,7 +15,7 @@ import {LibraryService} from '../../Services/library.service';
   selector: 'app-book-list',
   templateUrl: './BookList.component.html',
   styleUrl: './BookList.component.css',
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
   encapsulation:ViewEncapsulation.None
 })
 export class BookListComponent implements OnInit {
@@ -25,28 +25,35 @@ export class BookListComponent implements OnInit {
   private $authorService: AuthorService = inject(AuthorService);
   private $genreService: GenreService = inject(GenreService);
   private $libraryService: LibraryService = inject(LibraryService);
+  private $message: MessageService = inject(MessageService);
 
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   isAuth: boolean = false;
   isAdmin: boolean = false;
+  load: boolean = false;
   books: Book[] = [];
-  visibleDialog: boolean = false;
+  max: number = new Date().getFullYear() + 1;
+  error: boolean[] = [false, false, false, false, false, false, false];
+
+  visibleAddDialog: boolean = false;
+  visibleAddAuthorDialog: boolean = false;
+  visibleAddGenreDialog: boolean = false;
+  visibleAddLibraryDialog: boolean = false;
+
   newBook: Partial<Book> = {};
+  newAuthor: Partial<Author> = {};
+  newGenre: Partial<Genre> = {};
+  newLibrary: Partial<Library> = {};
 
   NewAuthor!: Author | null;
   NewGenre!: Genre | null;
   NewLibrary!: Library | null;
   Authors!: Author[];
   Genres!: Genre[];
-  Libraries: Library[] = [
-    { libraryId: 1, city: 'Paris', country: 'France', numberH: '10', street: 'Rue de Paris', stock: 10, postalCode: '6000' },
-    { libraryId: 2, city: 'Lyon', country: 'France', numberH: '10', street: 'Rue de Lyon', stock: 10, postalCode: '6900' },
-    { libraryId: 3, city: 'Marseille', country: 'France', numberH: '10', street: 'Rue de Marseille', stock: 10, postalCode: '1300' },
-    { libraryId: 4, city: 'Toulouse', country: 'France', numberH: '10', street: 'Rue de Toulouse', stock: 10, postalCode: '3100' },
-  ];
+  Libraries!: Library[];
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.getBooks();
     this.$authService.isConnectedSubject.subscribe({
       next: (isAuth: boolean) => {
@@ -81,28 +88,76 @@ export class BookListComponent implements OnInit {
     });
   }
 
-  confirmPopupCancel(event: MouseEvent) {
+  confirmPopupAddCancel(event: MouseEvent) {
     this.$confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Annuler les modifications?',
       accept: () => {
-        this.visibleDialog = false;
+        this.visibleAddDialog = false;
       },
       reject: () => {
       }
     });
   }
 
-  confirmPopupAdd(event: MouseEvent) {
-    this.$confirmationService.confirm({
-      target: event.target as EventTarget,
-      message: 'Ajouter le livre?',
-      accept: () => {
-        this.visibleDialog = false;
-      },
-      reject: () => {
-      }
-    });
+  confirmPopupAddSave(event: MouseEvent) {
+    if(!this.verifFrom()) {
+      this.$confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: 'Ajouter le livre?',
+        accept: () => {
+          this.load = true;
+          this.$bookService.addBook(this.newBook as Book).subscribe({
+            next: () => {
+              this.visibleAddDialog = false;
+              this.load = false;
+              this.getBooks();
+            },
+            error: () => {
+              this.$message.add({severity: 'error', summary: 'Error', detail: 'No Book insert'});
+              this.load = false;
+            }
+          });
+          this.visibleAddDialog = false;
+        },
+        reject: () => {
+        }
+      });
+    }
+  }
+
+  verifFrom() {
+    this.error = [false, false, false, false, false, false, false];
+    let error = false;
+    if(this.newBook.title === undefined || this.newBook.title === '') {
+      this.error[0] = true;
+      error = true;
+    }
+    if(this.newBook.edition === undefined || this.newBook.edition === '') {
+      this.error[1] = true;
+      error = true;
+    }
+    if(this.newBook.editionDate === undefined || this.newBook.editionDate < 0 || this.newBook.editionDate > this.max) {
+      this.error[2] = true;
+      error = true;
+    }
+    if(this.newBook.price === undefined || this.newBook.price < 0) {
+      this.error[3] = true;
+      error = true;
+    }
+    if(this.newBook.authors === undefined || this.newBook.authors.length === 0) {
+      this.error[4] = true;
+      error = true;
+    }
+    if(this.newBook.genres === undefined || this.newBook.genres.length === 0) {
+      this.error[5] = true;
+      error = true;
+    }
+    if(this.newBook.libraries === undefined || this.newBook.libraries.length === 0) {
+      this.error[6] = true;
+      error = true;
+    }
+    return error;
   }
 
   accept() {
@@ -114,11 +169,11 @@ export class BookListComponent implements OnInit {
   }
 
   ShowAddDialog() {
-    this.visibleDialog = true;
+    this.visibleAddDialog = true;
     this.newBook = {
       authors: [],
       genres: [],
-      libraries: []
+      libraries: [],
     };
   }
 
@@ -155,18 +210,98 @@ export class BookListComponent implements OnInit {
   }
 
   addLibrary() {
+    this.NewLibrary!.stock = 1;
     this.newBook.libraries?.push(this.NewLibrary!);
-    const index = this.Libraries.findIndex(l => l.libraryId === this.NewLibrary?.libraryId);
+    const index = this.Libraries.findIndex(l => l.libraryID === this.NewLibrary?.libraryID);
     this.Libraries.splice(index, 1);
     this.NewLibrary = null;
   }
 
   DeleteLibrary(library: Library) {
-    const index = this.newBook.libraries?.findIndex(l => l.libraryId === library.libraryId);
+    const index = this.newBook.libraries?.findIndex(l => l.libraryID === library.libraryID);
     if(index !== -1) {
       this.newBook.libraries?.splice(index!, 1);
     }
     this.Libraries.push(library);
     this.Libraries.sort((a, b) => a.city.localeCompare(b.city));
   }
+
+  showDialogAddAuthor() {
+    this.visibleAddAuthorDialog = true;
+    this.newAuthor = {};
+  }
+
+  showAuthorCancelDialog() {
+    this.visibleAddAuthorDialog = false;
+  }
+
+  showAuthorSaveDialog() {
+    this.visibleAddAuthorDialog = false;
+    try {
+      this.$authorService.addAuthor(this.newAuthor as Author).subscribe({
+        next: (author) => {
+          this.Authors.push(author);
+          this.Authors.sort((a, b) => a.firstName.localeCompare(b.firstName));
+        },
+        error: () => {
+          this.$message.add({severity: 'error', summary: 'Error', detail: 'No Author insert'});
+        }
+      })
+    } catch (error) {
+      this.$message.add({severity: 'error', summary: 'Error', detail: 'No Author insert'});
+    }
+  }
+
+  showDialogAddGenre() {
+    this.visibleAddGenreDialog = true;
+    this.newGenre = {};
+  }
+
+  showGenreCancelDialog() {
+    this.visibleAddGenreDialog = false;
+  }
+
+  showGenreSaveDialog() {
+    this.visibleAddGenreDialog = false;
+    try {
+      this.$genreService.addGenre(this.newGenre as Genre).subscribe({
+        next: (genre) => {
+          this.Genres.push(genre);
+          this.Genres.sort((a, b) => a.gName.localeCompare(b.gName));
+        },
+        error: () => {
+          this.$message.add({severity: 'error', summary: 'Error', detail: 'No Genre insert'});
+        }
+      })
+    } catch (e) {
+      this.$message.add({severity: 'error', summary: 'Error', detail: 'No Genre insert'});
+    }
+  }
+
+  showDialogAddLibrary() {
+    this.visibleAddLibraryDialog = true;
+    this.newLibrary = {};
+  }
+
+  showLibraryCancelDialog() {
+    this.visibleAddLibraryDialog = false;
+  }
+
+  showLibrarySaveDialog() {
+    this.visibleAddLibraryDialog = false;
+    try {
+      this.$libraryService.addLibrary(this.newLibrary as Library).subscribe({
+        next: (library) => {
+          this.Libraries.push(library);
+          this.Libraries.sort((a, b) => a.city.localeCompare(b.city));
+        },
+        error: () => {
+          this.$message.add({severity: 'error', summary: 'Error', detail: 'No Library insert'});
+        }
+      })
+    } catch (e) {
+      this.$message.add({severity: 'error', summary: 'Error', detail: 'No Library insert'});
+    }
+  }
+
 }

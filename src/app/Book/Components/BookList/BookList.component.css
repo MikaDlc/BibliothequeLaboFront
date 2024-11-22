@@ -17,10 +17,6 @@
   width: 100%;
 }
 
-.p-inputnumber {
-  width: 100%;
-}
-
 .Cross {
   position: relative;
   left: -4ch;
@@ -30,4 +26,19 @@
 .addButton {
   padding-left: 5px;
   user-select: none;
+}
+
+.input-stock input {
+  width: 124px;
+  text-align: center;
+}
+
+.input-num input {
+  width: 172px;
+  text-align: center;
+}
+
+.error{
+  border: solid 2px #e24c4c;
+  border-radius: 8px;
 }
