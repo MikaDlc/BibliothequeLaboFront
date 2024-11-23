@@ -3,11 +3,11 @@ import {AuthService} from '../Services/auth.service';
 import {inject} from '@angular/core';
 
 export const noAuthGuard: CanActivateFn = () => {
-  const _AuthService: AuthService = inject(AuthService);
-  const _Router = inject(Router);
+  const $authService: AuthService = inject(AuthService);
+  const $router = inject(Router);
 
-  if (_AuthService.isConnected) {
-    _Router.navigate(['/', 'Books', 'All']);
+  if ($authService.isConnected) {
+    $router.navigate(['/', 'Books', 'All']);
     return false;
   } else {
     return true;

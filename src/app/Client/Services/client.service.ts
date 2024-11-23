@@ -15,6 +15,15 @@ export class ClientService {
   }
 
   updateAdress(client: ClientDetails) {
-    return this.$client.put(this._url, client).pipe();
+    let updateClient = {
+      name: client.name,
+      firsName: client.firsName,
+      city: client.city,
+      postalCode: client.postalCode,
+      street: client.street,
+      country: client.country,
+      numberH: client.numberH,
+    }
+    return this.$client.put(this._url, updateClient).pipe();
   }
 }

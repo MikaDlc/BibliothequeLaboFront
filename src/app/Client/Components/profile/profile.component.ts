@@ -33,7 +33,7 @@ export class ProfileComponent implements OnInit {
     this.fg = this.$fb.group({
       email: new FormControl({value: this.user.email, disabled: true}),
       name: new FormControl({value: this.user.name, disabled: true}),
-      firstName: new FormControl({value: this.user.firsName, disabled: true}),
+      firsName: new FormControl({value: this.user.firsName, disabled: true}),
       city: new FormControl({value: this.user.city, disabled: true}, [Validators.required]),
       postalCode: new FormControl({value: this.user.postalCode, disabled: true}, [Validators.required, Validators.maxLength(4)]),
       street: new FormControl({value: this.user.street, disabled: true}, [Validators.required]),
@@ -59,6 +59,7 @@ export class ProfileComponent implements OnInit {
       this.fg.controls['street'].disable();
       this.fg.controls['country'].disable();
       this.fg.controls['numberH'].disable();
+      this.$ClientService.updateAdress(this.fg.value).subscribe();
     }
   }
 
